@@ -1,0 +1,343 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0b;
+  --color-bg-soft: #151517;
+  --color-bg-soft-2: #1f1f22;
+  --color-border: #2a2a2e;
+  --color-fg: #e5e5e5;
+  --color-fg-dim: #6b6b6b;
+  --color-fg-dimmer: #3f3f42;
+  --color-accent: #22d3ee;
+  --color-accent-dim: #0891b2;
+  --color-opponent: #f472b6;
+  --color-opponent-dim: #9d174d;
+  --color-opponent-glow: rgba(244, 114, 182, 0.18);
+
+  /* Per-seat identity colors. Fixed globally so a racer looks the same to
+     everyone, including spectators. Kept clear of ok/error, which already
+     mean "finished" and "wrong character". */
+  --color-seat-1: #22d3ee;
+  --color-seat-2: #f472b6;
+  --color-seat-3: #fbbf24;
+  --color-seat-4: #a78bfa;
+  --color-error: #ef4444;
+  --color-error-soft: rgba(239, 68, 68, 0.18);
+  --color-ok: #22c55e;
+
+  --font-mono:
+    "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.25);
+  color: var(--color-accent);
+}
+
+@keyframes caretBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes countdownPop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.countdown-number {
+  display: inline-block;
+  animation: countdownPop 1s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes countdownGo {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  30% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.countdown-go {
+  display: inline-block;
+  animation: countdownGo 500ms cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes reactionPulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.reaction-pulse {
+  animation: reactionPulse 260ms ease-out;
+}
+
+/* --toast-offset stacks concurrent reactions when several racers pile on. */
+.reaction-toast {
+  transform: translate3d(-50%, calc(var(--toast-offset, 0px) - 12px), 0)
+    scale(0.97);
+  opacity: 0;
+  transition:
+    transform 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.reaction-toast[data-state="visible"] {
+  transform: translate3d(-50%, var(--toast-offset, 0px), 0) scale(1);
+  opacity: 1;
+}
+
+.reaction-toast[data-state="leaving"] {
+  transform: translate3d(-50%, calc(var(--toast-offset, 0px) - 8px), 0)
+    scale(0.985);
+  opacity: 0;
+}
+
+@keyframes sprintCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sprintBarIn {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes sprintWinnerPulse {
+  0%, 100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes warmupIn {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.word-sprint-card {
+  animation: sprintCardIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.word-sprint-player {
+  animation: sprintCardIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.word-sprint-player:nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.word-sprint-player:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.word-sprint-player:nth-child(4) {
+  animation-delay: 210ms;
+}
+
+.word-sprint-bar {
+  transform-origin: left center;
+  animation: sprintBarIn 620ms 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.word-sprint-winner {
+  animation: sprintWinnerPulse 1.4s ease-in-out infinite;
+}
+
+.mobile-type-capture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.01;
+  resize: none;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+.invite-link-field {
+  caret-color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invite-link-field::selection {
+  color: var(--color-accent);
+  background: transparent;
+}
+
+.waiting-warmup {
+  animation: warmupIn 140ms ease-out both;
+}
+
+.passage-char {
+  position: relative;
+}
+
+/* One caret rule for every racer; color comes from the seat theme. */
+.smooth-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  pointer-events: none;
+  background: var(--caret-color, var(--color-accent));
+  transition:
+    transform 95ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 95ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, height;
+  z-index: 2;
+}
+
+.smooth-caret[data-self="true"] {
+  box-shadow: 0 0 8px var(--caret-color, var(--color-accent));
+  animation: caretBlink 1s steps(2, start) infinite;
+  z-index: 3;
+}
+
+/* Rivals stay legible without four glows repainting on every keystroke. */
+.smooth-caret[data-self="false"] {
+  opacity: 0.8;
+}
+
+.caret-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--caret-color, var(--color-opponent));
+  transition: transform 95ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  z-index: 3;
+}
+
+/* Leaderboard rail: rows keep a stable DOM order and are positioned by
+   rank, so overtakes slide instead of jumping. */
+.rail {
+  position: relative;
+}
+
+.rail-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease-out;
+  will-change: transform;
+}
+
+.rail-bar {
+  transform-origin: left center;
+  transition: transform 110ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.seat-chip {
+  animation: warmupIn 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.passage-char[data-wrong="true"] {
+  color: var(--color-error);
+  background: var(--color-error-soft);
+  border-radius: 2px;
+}
+
+/* A four-way race has a lot in motion at once: four carets, a reordering
+   leaderboard, and stacked reaction toasts. Honour the OS preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .smooth-caret[data-self="true"] {
+    animation: none;
+  }
+}

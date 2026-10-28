@@ -1,0 +1,101 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+.dev.vars.*
+wrangler.toml.bak
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.local
+secrets.txt
+secrets.*
+notes.txt
+scratch.txt
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+*.log
+
+# Testing / coverage
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+playwright/.cache/
+
+# k6 local summary exports
+k6-summary.json
+load-tests/last-summary.json
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.cache/
+.turbo/
+# Codex Git sync: keep local secrets, generated files, and user data out of source control
+.env
+.env.*
+!.env.example
+!.env.*.example
+/vendor/
+**/vendor/
+/node_modules/
+**/node_modules/
+/.venv/
+**/.venv/
+__pycache__/
+*.py[cod]
+.phpunit.cache
+.phpunit.result.cache
+.pytest_cache/
+.pytest-tmp/
+.pytest-last-run/
+*.log
+error_log
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/app/private/
+/uploads/
+**/uploads/
+*.sqlite
+*.sqlite3
+*.db
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.pem
+*.key
+cookies.txt
+Thumbs.db
+.DS_Store

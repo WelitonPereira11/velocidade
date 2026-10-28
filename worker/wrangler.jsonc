@@ -1,0 +1,115 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "typing-race-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ROOM",
+        "class_name": "Room"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["Room"]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "typing-race-db",
+      "database_id": "0d434b1c-0446-40a5-b392-91010053003a"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "ROOM_CREATE_RATE_LIMITER",
+      "namespace_id": "2661001",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    },
+    {
+      "name": "WS_JOIN_RATE_LIMITER",
+      "namespace_id": "2661002",
+      "simple": {
+        "limit": 60,
+        "period": 60
+      }
+    },
+    {
+      "name": "EVENT_RATE_LIMITER",
+      "namespace_id": "2661003",
+      "simple": {
+        "limit": 120,
+        "period": 60
+      }
+    }
+  ],
+  "vars": {
+    "SENTRY_ENVIRONMENT": "production"
+  },
+  "env": {
+    "k6": {
+      "name": "typing-race-api-k6",
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "ROOM",
+            "class_name": "Room"
+          }
+        ]
+      },
+      "migrations": [
+        {
+          "tag": "v1",
+          "new_sqlite_classes": ["Room"]
+        }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "typing-race-db-k6",
+          "database_id": "badeb126-fd16-4bed-bec8-cb03ecee0005"
+        }
+      ],
+      "ratelimits": [
+        {
+          "name": "ROOM_CREATE_RATE_LIMITER",
+          "namespace_id": "2662001",
+          "simple": {
+            "limit": 1000,
+            "period": 60
+          }
+        },
+        {
+          "name": "WS_JOIN_RATE_LIMITER",
+          "namespace_id": "2662002",
+          "simple": {
+            "limit": 5000,
+            "period": 60
+          }
+        },
+        {
+          "name": "EVENT_RATE_LIMITER",
+          "namespace_id": "2662003",
+          "simple": {
+            "limit": 10000,
+            "period": 60
+          }
+        }
+      ],
+      "vars": {
+        "SENTRY_ENVIRONMENT": "k6"
+      }
+    }
+  }
+}
